@@ -3,7 +3,9 @@ package co.jmarango.okabe2.audio;
 import co.jmarango.okabe2.dto.VideoInfo;
 import co.jmarango.okabe2.dto.response.Response;
 import co.jmarango.okabe2.dto.response.RichResponse;
+import co.jmarango.okabe2.utils.URLUtils;
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
+import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
@@ -36,21 +38,27 @@ public class AudioResultHandler implements AudioLoadResultHandler {
 
     @Override
     public void trackLoaded(AudioTrack track) {
+        String uri = track.getInfo().uri;
+
         RichResponse r = new RichResponse();
+
         r.setColor(new Color(0, 51, 102));
         r.setTitle("Canción añadida a la cola");
-        r.setText(String.format("[%s](%s) de `%s`", track.getInfo().title, track.getInfo().uri, track.getInfo().author));
+        r.setText(String.format("[%s](%s) de `%s`", track.getInfo().title.trim(), uri, track.getInfo().author));
 
         List<MessageEmbed.Field> fields = new ArrayList<>();
-        fields.add(new MessageEmbed.Field("Duración", new VideoInfo(track.getInfo()).durationToReadable(), false));
+        fields.add(new MessageEmbed.Field("Duración", new VideoInfo(track.getInfo()).durationToReadable(), true));
 
         int size = musicService.getGuildMusicManager(guild).getScheduler().getQueueSize()+1;
-        fields.add(new MessageEmbed.Field("En cola", String.format(size==1?"%d canción":"%d canciones", size), false));
+        fields.add(new MessageEmbed.Field("En cola", String.format(size==1?"%d canción":"%d canciones", size), true));
 
         r.setFields(fields);
 
         r.setFooter(new RichResponse.Footer(String.format("Agregada por %s", member.getEffectiveName()), member.getEffectiveAvatarUrl()));
 
+        if (track.getSourceManager() instanceof YoutubeAudioSourceManager) {
+            URLUtils.getURLParam(uri, "v").ifPresent(s -> r.setThumbnail(String.format("https://img.youtube.com/vi/%s/maxresdefault.jpg", s)));
+        }
 
         response = r;
         musicService.play(guild, musicService.getGuildMusicManager(guild), track, member);
