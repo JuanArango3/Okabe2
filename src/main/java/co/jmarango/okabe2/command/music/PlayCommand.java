@@ -2,8 +2,6 @@ package co.jmarango.okabe2.command.music;
 
 import co.jmarango.okabe2.audio.MusicService;
 import co.jmarango.okabe2.command.SlashCommand;
-import co.jmarango.okabe2.dto.response.Response;
-import co.jmarango.okabe2.dto.response.RichResponse;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
@@ -33,15 +31,9 @@ public class PlayCommand extends SlashCommand {
             } catch (URISyntaxException e) {
                 cancion = "ytsearch:"+cancion;
             }
-            if (event.getGuild().getVoiceChannels().parallelStream().filter(vc->vc.getMembers().contains(event.getMember())).findFirst().isEmpty()) {
-                RichResponse response = new RichResponse();
-                response.setEphimeral(true);
-                response.setType(Response.Type.USER_ERROR);
-                response.setTitle("No estás en ningún canal de voz");
 
-                response.sendReply(event);
-                return;
-            }
+            if (noVoiceChannelCheck(event)) return;
+
 
             //event.reply("no").queue();
             musicService.loadAndPlay(event.getChannel().asTextChannel(), cancion, event.getMember()).sendReply(event);

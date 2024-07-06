@@ -16,6 +16,7 @@ public class SkipCommand extends SlashCommand {
     }
     @Override
     public void onCommand(SlashCommandInteractionEvent event) {
+        if (noVoiceChannelCheck(event)) return;
         musicService.skipTrack(event.getChannel().asTextChannel()).sendReply(event);
     }
 }
