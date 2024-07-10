@@ -5,10 +5,10 @@ import co.jmarango.okabe2.dto.response.Response;
 import co.jmarango.okabe2.dto.response.RichResponse;
 import co.jmarango.okabe2.utils.URLUtils;
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
-import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+import dev.lavalink.youtube.YoutubeAudioSourceManager;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.entities.Guild;
@@ -78,7 +78,7 @@ public class AudioResultHandler implements AudioLoadResultHandler {
         }
 
         response=new Response(String.format("Agregada la playlist %s con %s canciones", playlist.getName(), playlist.getTracks().size()), Response.Type.OK, false);
-        musicService.play(guild, musicService.getGuildMusicManager(guild), firstTrack, member);
+        musicService.playPlaylist(guild, musicService.getGuildMusicManager(guild), playlist, member);
     }
 
     @Override

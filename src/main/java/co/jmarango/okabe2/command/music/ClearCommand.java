@@ -18,6 +18,6 @@ public class ClearCommand extends SlashCommand {
     public void onCommand(SlashCommandInteractionEvent event) {
         if (noVoiceChannelCheck(event)) return;
 
-        musicService.getGuildMusicManager(event.getGuild()).scheduler.clear();
+        musicService.clear(event.getGuild()).sendReply(event);
     }
 }

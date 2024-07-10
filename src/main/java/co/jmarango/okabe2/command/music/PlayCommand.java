@@ -35,9 +35,7 @@ public class PlayCommand extends SlashCommand {
             if (noVoiceChannelCheck(event)) return;
 
 
-            //event.reply("no").queue();
             musicService.loadAndPlay(event.getChannel().asTextChannel(), cancion, event.getMember()).sendReply(event);
-            //musicService.loadAndPlay(event.getChannel().asTextChannel(), event.getOption("canción", OptionMapping::getAsString), event.getMember());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
