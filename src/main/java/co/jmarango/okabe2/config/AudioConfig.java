@@ -38,6 +38,12 @@ public class AudioConfig extends ListenerAdapter {
 
     public void onGuildVoiceUpdate(@NotNull GuildVoiceUpdateEvent e) {
         if (e.getChannelLeft()==null) return;
+
+        if (e.getMember().equals(e.getGuild().getSelfMember())) {
+            musicService.getGuildMusicManager(e.getGuild()).getScheduler().clear();
+            return;
+        }
+
         GuildVoiceState state = e.getGuild().getSelfMember().getVoiceState();
         assert state != null;
         if (state.getChannel()==null) return;
