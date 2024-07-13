@@ -1,6 +1,7 @@
 package co.jmarango.okabe2.config;
 
 import co.jmarango.okabe2.command.SlashCommand;
+import jakarta.annotation.PreDestroy;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.JDA;
@@ -36,6 +37,8 @@ public class BotConfiguration extends ListenerAdapter {
     public JDA jda() {
         log.info("Starting Bot");
 
+        if (token.equals("default")) throw new IllegalArgumentException("Bot token not specified in environment / application.properties");
+
         if (!listeners.contains(this)) listeners.add(this);
 
         JDA jda;
@@ -66,6 +69,17 @@ public class BotConfiguration extends ListenerAdapter {
 
         log.info("Bot started");
         return jda;
+    }
+
+    @PreDestroy
+    public void shutdown() {
+        log.info("Shutting down");
+
+        try {
+            jda().awaitShutdown();
+        } catch (InterruptedException e) {
+            log.error("Error during bot shutdown", e);
+        }
     }
 
 
