@@ -77,7 +77,29 @@ public class AudioResultHandler implements AudioLoadResultHandler {
             return;
         }
 
-        response=new Response(String.format("Agregada la playlist %s con %s canciones", playlist.getName(), playlist.getTracks().size()), Response.Type.OK, false);
+        RichResponse r = new RichResponse();
+
+        r.setColor(new Color(0, 51, 102));
+        r.setTitle("Playlist añadida a la cola");
+
+        r.setText(String.format("%s", playlist.getName()));
+
+        int playlistSize = playlist.getTracks().size();
+        List<MessageEmbed.Field> fields = new ArrayList<>();
+        fields.add(new MessageEmbed.Field("Canciones añadidas", String.valueOf(playlistSize), true));
+
+        int size = musicService.getGuildMusicManager(guild).getScheduler().getQueueSize()+playlistSize;
+        fields.add(new MessageEmbed.Field("En cola", String.format(size==1?"%d canción":"%d canciones", size), true));
+
+        r.setFields(fields);
+
+        r.setFooter(new RichResponse.Footer(String.format("Agregada por %s", member.getEffectiveName()), member.getEffectiveAvatarUrl()));
+
+        if (firstTrack.getSourceManager() instanceof YoutubeAudioSourceManager) {
+            URLUtils.getURLParam(firstTrack.getInfo().uri, "v").ifPresent(s -> r.setThumbnail(String.format("https://img.youtube.com/vi/%s/maxresdefault.jpg", s)));
+        }
+
+        response = r;
         musicService.playPlaylist(guild, musicService.getGuildMusicManager(guild), playlist, member);
     }
 
