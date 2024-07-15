@@ -105,12 +105,20 @@ public class AudioResultHandler implements AudioLoadResultHandler {
 
     @Override
     public void noMatches() {
-        response=new Response("No se encontró nada", Response.Type.USER_ERROR, false);
+        RichResponse r = new RichResponse();
+
+        r.setType(Response.Type.USER_ERROR);
+        r.setText("No se encontró nada");
+        response=r;
     }
 
     @Override
     public void loadFailed(FriendlyException exception) {
-        response=new Response("Error interno", Response.Type.ERROR, false);
         log.error("Error cargando el track", exception);
+
+        RichResponse r = new RichResponse();
+        r.setType(Response.Type.ERROR);
+        r.setText("Error interno");
+        response=r;
     }
 }
