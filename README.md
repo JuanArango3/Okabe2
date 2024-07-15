@@ -19,7 +19,7 @@ El bot puede ejecutarse de dos maneras:
     docker build -t okabe .
     ```
 
-2. Ejecutar el contenedor de Docker especificando el token del bot de Discord:
+2. Ejecutar el contenedor de Docker especificando el token del bot de Discord generado desde el [Developer portal](https://discord.com/developers/applications):
     ```sh
     docker run -e BOT_TOKEN=your_discord_bot_token okabe
     ```
