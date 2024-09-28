@@ -24,6 +24,7 @@ public class PlayCommand extends SlashCommand {
 
     @Override
     public void onCommand(SlashCommandInteractionEvent event) {
+        event.deferReply().queue();
         try {
             String cancion = event.getOption("canción", OptionMapping::getAsString);
             try {
@@ -35,7 +36,7 @@ public class PlayCommand extends SlashCommand {
             if (noVoiceChannelCheck(event)) return;
 
 
-            musicService.loadAndPlay(event.getChannel().asTextChannel(), cancion, event.getMember()).sendReply(event);
+            musicService.loadAndPlay(event.getChannel().asTextChannel(), cancion, event.getMember()).editReply(event);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

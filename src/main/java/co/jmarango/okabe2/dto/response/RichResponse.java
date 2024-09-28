@@ -32,6 +32,14 @@ public class RichResponse extends Response {
 
     @Override
     public void sendReply(SlashCommandInteractionEvent event) {
+        event.replyEmbeds(buildEmbed()).setEphemeral(isEphimeral()).queue();
+    }
+
+    public void editReply(SlashCommandInteractionEvent event) {
+        event.getInteraction().getHook().editOriginalEmbeds(buildEmbed()).queue();
+    }
+
+    private MessageEmbed buildEmbed() {
         EmbedBuilder eb = new EmbedBuilder();
 
         if (title != null) eb.setTitle(title);
@@ -50,7 +58,7 @@ public class RichResponse extends Response {
 
         eb.setDescription(getText());
 
-        event.replyEmbeds(eb.build()).setEphemeral(isEphimeral()).queue();
+        return eb.build();
     }
 
     @Data

@@ -21,6 +21,10 @@ public class Response {
         OK, ERROR, USER_ERROR
     }
 
+    public void editReply(SlashCommandInteractionEvent event) {
+        event.getInteraction().getHook().editOriginal(text).queue();
+    }
+
     public void sendReply(SlashCommandInteractionEvent event) {
         event.reply(text).setEphemeral(ephimeral).queue();
     }
